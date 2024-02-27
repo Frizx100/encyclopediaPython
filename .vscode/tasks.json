@@ -1,0 +1,105 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    // "options": {
+    //     "env": {
+    //         // Don't forget to add for e.g DJANGO_SETTINGS_MODULE=project.setting.local withing settings.json for your workspace
+    //         "DJANGO_SETTINGS_MODULE": "${config:DJANGO_SETTINGS_MODULE}",
+    //     }
+    // },
+    "tasks": [
+        {
+            "label": "Django Show Migrations",
+            "type": "shell",
+            "detail": "Show migrations for whole django project.",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "showmigrations",
+            ],
+            // just skip prompt for matchers
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+        },
+        {
+            "label": "Django Make Migrations For App",
+            "type": "shell",
+            "detail": "Make migrations for particular django app.",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "makemigrations",
+                "${input:appNamesCommand}"
+            ],
+            // just skip prompt for matchers
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "label": "Django Migrate For App",
+            "type": "shell",
+            "detail": "Apply or unapply migrations for particular django app.",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "migrate",
+                "${input:appNamesCommand}",
+                "${input:migrationsForAppNameCommand}",
+            ],
+            // just skip prompt for matchers
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "label": "Django Migrate",
+            "type": "shell",
+            "detail": "Apply migrations for whole django project.",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "migrate",
+            ],
+            // just skip prompt for matchers
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+        {
+            "label": "Django Run Custom Command",
+            "type": "shell",
+            "detail": "Run custom management command.",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "${input:availableCommandNamesCommand}",
+            ],
+            // just skip prompt for matchers
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+        },
+    ],
+    "inputs": [
+        {
+            "id": "migrationsForAppNameCommand",
+            "command": "shellCommand.execute",
+            "args": {
+                // tail -n +2 - just skip first line which contains name for an app
+                // sed -E 's/ \\[X\\] | \\[ \\] //g'  - simple regex to skip django markings for applied|unapplied 
+                "command": "python manage.py showmigrations ${input:appNamesCommand} | tail -n +2 | sed -E 's/ \\[X\\] | \\[ \\] //g' ",
+                "cwd": "${workspaceFolder}",
+                "description": "Chose migration module to run",
+            },
+            "type": "command"
+        },
+    ]
+}

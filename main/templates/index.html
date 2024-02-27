@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <div style="display: flex;">
+        <nav>
+            <div class="mobile-navigation">
+                <img onclick="hideSidebar()" src = "{% static 'icons/close.png' %}" alt = 'close' style="width: 26px; height: 26px; display: block;">
+                <!--
+                <ul>
+                    <li class="category">test 1</li>
+                        <ul>
+                            <li class="article"><a href="">a 1</a></li>
+                            <li class="article"><a href="">a 2</a></li>
+                            <li class="article"><a href="">a 3</a></li>
+                        </ul>
+                    <li class="category">test 2</li>
+                    <li class="category">test 3</li>
+                    <li class="category">test 4</li>
+                </ul>
+                -->
+
+                <ul class="hideOnMobile navigation" style="padding-top: 20px;">
+                    {% for i in category %}
+                        {% if i.getArticles|length > 0 %}
+                            <li class="category">
+                                <span>{{i.name}}</span>
+                                <ul class="navigation">
+                                    {% for article in i.getArticles %}
+                                        {% if object.id == article.pk %}
+                                            <li class="article active">
+                                                <a href="{% url 'article-detail' article.pk %}">{{article.title}}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="article">
+                                                <a href="{% url 'article-detail' article.pk %}">{{article.title}}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+            </div>
+    
+            <div>
+                <div style="display: flex; width:fit-content; margin: 10px auto;">
+                    <img class="hideOnMobile" src = "{% static 'icons/Python-logo.png' %}" alt = 'logo' style="width: 36px; height: 36px;">
+                    <span class="hideOnMobile" style="font-size: 26px; margin-left: 10px; font-weight: 700; letter-spacing: 0.25em; color: #faa428;">PYTHON</span>
+                </div>
+                <ul class="hideOnMobile navigation" style="padding-top: 20px;">
+                    {% for i in category %}
+                        {% if i.getArticles|length > 0 %}
+                            <li class="category">
+                                <span>{{i.name}}</span>
+                                <ul class="navigation">
+                                    {% for article in i.getArticles %}
+                                        {% if object.id == article.pk %}
+                                            <li class="article active">
+                                                <a href="{% url 'article-detail' article.pk %}">{{article.title}}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="article">
+                                                <a href="{% url 'article-detail' article.pk %}">{{article.title}}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <img class="menu-bar" onclick="showSidebar()" src = "{% static 'icons/menu_bar.png' %}" alt = 'menu-bar' style="width: 26px;">
+            </div>
+        </nav>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <script>
+        function showSidebar(){
+            const sidebar = document.querySelector('.mobile-navigation')
+            sidebar.style.display = 'block'
+            //block flex
+        }
+        function hideSidebar(){
+            const sidebar = document.querySelector('.mobile-navigation')
+            sidebar.style.display = 'none'
+        }
+    </script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

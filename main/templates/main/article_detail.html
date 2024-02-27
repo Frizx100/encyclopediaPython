@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% load extras %}
+
+{% block title %} 
+    {{object.title}}
+{% endblock %}
+
+{% block content %}
+    <h1>{{object.title}}</h1>
+    {{object.content|markdown|safe}}
+{% endblock %}
